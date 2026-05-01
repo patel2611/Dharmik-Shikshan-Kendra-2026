@@ -1,9 +1,69 @@
-const { data: user } = await supabase.auth.getUser();
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
-const { data: profile } = await supabase
-  .from('users_profile')
-  .select('*')
-  .eq('id', user.user.id)
-  .single();
+<style>
+body { font-family: Poppins; margin:0; display:flex; }
 
-console.log(profile);
+.sidebar {
+  width: 220px;
+  background:#111827;
+  color:white;
+  height:100vh;
+  padding:20px;
+}
+
+.sidebar button {
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  background:none;
+  border:none;
+  color:white;
+}
+
+.main {
+  flex:1;
+  padding:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+  <h3>Menu</h3>
+  <button onclick="goRegister()">Student Registration</button>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<div class="main">
+  <h2>Dashboard</h2>
+  <p id="userInfo"></p>
+</div>
+
+<script>
+const supabase = supabase.createClient("YOUR_URL","YOUR_ANON_KEY");
+
+async function loadUser() {
+  const { data } = await supabase.auth.getUser();
+  document.getElementById("userInfo").innerText =
+    "Logged in as: " + data.user.email;
+}
+
+function goRegister() {
+  window.location.href = "register.html";
+}
+
+async function logout() {
+  await supabase.auth.signOut();
+  window.location.href = "index.html";
+}
+
+loadUser();
+</script>
+
+</body>
+</html>
